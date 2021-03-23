@@ -5,8 +5,6 @@
  *
  * By Gary Chew and Kyle Stadelmann
  */
-const RECORD_TRANSITION_TIME = 2000;
-
 Module.register('MMM-1-Second-A-Day',
 {
 	defaults:
@@ -19,11 +17,7 @@ Module.register('MMM-1-Second-A-Day',
 		Log.info('Starting module: ' + this.name);
 		this.sendSocketNotification('START', this.config);
 		this.status = "STATUS_DEFAULT";
-		this.hasRecordedToday = false;
-		this.numStreakDays = 0;
-		this.numTotalClips = 0;
 		this.webcamVideoSrcObject = null;
-		this.firstRecordedDate = null;
 	},
 
 	getStyles: function() {
@@ -33,110 +27,55 @@ Module.register('MMM-1-Second-A-Day',
 	getDom: function() {
 		const wrapper = document.createElement("div");
 		wrapper.id = 'MMM1SecondADayContainer';
+
+		const recordButton = document.createElement("span");
+		recordButton.id = 'record_button'
+		recordButton.className = 'button'
+		var self = this;
+        recordButton.addEventListener("click", function () {
+			self.recordClip();
+        });
+
+        var symbol = document.createElement("span");
+		symbol.className = "control-symbol fa fa-pause";
+		recordButton.appendChild(symbol);
+		wrapper.appendChild(recordButton);
+		
 		const statusText = document.createElement("p");
 		wrapper.appendChild(statusText);
 		console.log(this.status);
-		switch(this.status) {
-			case "STATUS_DEFAULT":
-				statusText.innerHTML = this.hasRecordedToday ? "You have completed recording today's clip!" : "You haven't yet recorded today's clip.<br/>" +
-					"Say \"Hey Mirror, record a clip!\"";
-				break;
-			case "STATUS_RECORDING":
-				statusText.innerHTML = "Recording...";
-				wrapper.appendChild(statusText);
+		if (this.status == 'STATUS_RECORDING') {
+			statusText.innerHTML = "Recording...";
+			wrapper.appendChild(statusText);
 
-				const webcamVideoContainer = document.createElement("div");
-				webcamVideoContainer.id = "webcamVideoContainer";
-				wrapper.appendChild(webcamVideoContainer);
+			const webcamVideoContainer = document.createElement("div");
+			webcamVideoContainer.id = "webcamVideoContainer";
+			wrapper.appendChild(webcamVideoContainer);
 
-				const webcamVideo = document.createElement("video");
-				webcamVideo.autoplay = true;
-				webcamVideo.id = "webcamVideo";
-				webcamVideo.srcObject = this.webcamVideoSrcObject
-				webcamVideoContainer.appendChild(webcamVideo);
-				break;
-			case "STATUS_COMPILING":
-				statusText.innerHTML = "Compiling...";
-				break;
-			case "STATUS_UPLOADING":
-				statusText.innerHTML = "Uploading...";
-				break;
-			case "STATUS_UPLOADED":
-				statusText.innerHTML = "Uploaded!";
-				break;
-
-		}
-
-		// const streak = document.createElement("p");
-		// streak.innerHTML = this.numStreakDays + "-day streak";
-		// wrapper.appendChild(streak);
-
-		if (this.firstRecordedDate) {
-			const summary = document.createElement("p");
-			summary.innerHTML = this.numTotalClips + " total days recorded, starting from " + this.firstRecordedDate.toLocaleDateString() + ".";
-			wrapper.appendChild(summary);
+			const webcamVideo = document.createElement("video");
+			webcamVideo.autoplay = true;
+			webcamVideo.id = "webcamVideo";
+			webcamVideo.srcObject = this.webcamVideoSrcObject
+			webcamVideoContainer.appendChild(webcamVideo);
+		} else if (this.status == 'STATUS_UPLOADING') {
+			statusText.innerHTML = "Uploading...";
+		} else if (this.status == 'STATUS_UPLOADED') {
+			statusText.innerHTML = "Uploaded!";
 		}
 
 		return wrapper;
 	},
-	notificationReceived: function(notification, payload, sender) {
-		Log.info("MMM-1-Second-A-Day notificationReceived");
-		switch(notification) {
-			case "ALL_MODULES_STARTED":
-				this.sendNotification('REGISTER_VOICE_MODULE', {
-					mode: "CREATE",
-					sentences: [
-						"CREATE CLIP",
-						"CREATE COMPILATION"
-					]
-				});
-				break;
-			case "VOICE_CREATE":
-				Log.log("teststs");
-				if (sender.name === "MMM-voice"){
-					this.checkCommands(payload);
-				}
-				break;
-			case "RECORD_CLIP":
-				this.recordClip();
-				break;
-			case "COMPILE_CLIPS":
-				this.sendSocketNotification("COMPILE_CLIPS", this.config.driveDestination);
-				break;
-			case "UPLOAD_COMPILATIONS":
-				this.sendSocketNotification("UPLOAD_COMPILATIONS", this.config.driveDestination);
-				break;
-		}
-    },
+
     socketNotificationReceived: function(notification, payload) {
 	    Log.info("MMM-1-Second-A-Day socketNotificationReceived: " + notification);
-		switch(notification) {
-			case "STATUS_UPDATE":
-				this.status = payload.status;
-				if (this.status === 'STATUS_DEFAULT') {
-					this.numStreakDays = 0;
-					this.numTotalClips = payload.clipFileNames.length;
-					payload.clipFileNames.sort()
-					const firstFileName = payload.clipFileNames[0];
-					const firstRecordedDateString = firstFileName.slice(5, firstFileName.indexOf(".webm")).replace(/_/g, "/");
-					this.firstRecordedDate = new Date(firstRecordedDateString);
-				}
-
-				this.updateDom(RECORD_TRANSITION_TIME);
-				break;
-			default:
-				Log.error("Unhandled socketNotification")
-				break;
-		}
     },
+
 	recordClip: function () {
 		const self = this;
 		navigator.mediaDevices.getUserMedia({video: true}).then(function (stream) {
 			self.status = "STATUS_RECORDING";
-			// TODO: Reset at end of day
-			self.hasRecordedToday = true;
 			self.webcamVideoSrcObject = stream;
-			self.updateDom(RECORD_TRANSITION_TIME);
+			self.updateDom(500);
 
 			setTimeout(() => {
 				const blob_reader = new FileReader();
@@ -158,19 +97,9 @@ Module.register('MMM-1-Second-A-Day',
 				});
 
 				recorder.start();
-				setTimeout(() => recorder.stop(), 1000);
-			}, RECORD_TRANSITION_TIME);
+				setTimeout(() => recorder.stop(), 10000); // 10 seconds
+			}, 500);
 
 		});
 	},
-
-	checkCommands: function(data){
-		if(/(CLIP)/g.test(data)){
-			Log.log("Detected RECORD_CLIP command");
-			this.recordClip();
-		} else if (/(COMPILATION)/g.test(data)) {
-			Log.log("Detected COMPILE_CLIPS command");
-			this.sendSocketNotification("COMPILE_CLIPS");
-		}
-	}
 });

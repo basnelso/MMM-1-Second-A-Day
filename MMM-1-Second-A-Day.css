@@ -13,3 +13,20 @@
   height: 375px;
   background-color: #666;
 }
+
+.button {
+  z-index: 1;
+  /* Border */
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 15px;
+
+  /* as container */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  margin: 2px;
+  padding: 6px 6px;
+}

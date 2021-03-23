@@ -4,17 +4,15 @@ const fs = require('fs');
 const moment = require('moment');
 
 const PATH_TO_CLIPS = './modules/MMM-1-Second-A-Day/videos/clips/';
-const PATH_TO_COMPILATIONS ='./modules/MMM-1-Second-A-Day/videos/compilations/';
 
 module.exports = NodeHelper.create({
     start: function() {
         console.log("Starting node helper for: " + this.name);
     },
 
-	notificationReceived: function(notification, payload, sender) {
-	},
-
     socketNotificationReceived: function(notification, payload) {
+		console.log('node got notification:')
+		console.log(notification);
     	const self = this;
 		switch(notification) {
 			case "START":
@@ -26,9 +24,6 @@ module.exports = NodeHelper.create({
 				break;
 			case "SAVE_CLIP":
 				this.saveClip(payload);
-				break;
-			case "COMPILE_CLIPS":
-				this.compileClips(payload);
 				break;
 			case "UPLOAD_COMPILATIONS":
 				this.uploadCompilations(payload);
@@ -57,50 +52,6 @@ module.exports = NodeHelper.create({
 			});
         })
     },
-
-    compileClips: function (driveConfig) {
-		this.sendSocketNotification("STATUS_UPDATE", {
-			status: "STATUS_COMPILING"
-		});
-		const fs = require('fs');
-		const ffmpeg = require('fluent-ffmpeg');
-		const moment = require('moment');
-		const currTime = moment().format('YYYY[_]MM[_]DD');
-		const fileExtension = 'webm';
-		const mergeFileName = 'compilation_' + currTime + '.' + fileExtension;
-
-		const command = ffmpeg();
-
-		let clipFileNames = fs.readdirSync(PATH_TO_CLIPS);
-		clipFileNames.forEach(function(filename) {
-			// add each video file to ffmpeg command
-  			command.addInput(PATH_TO_CLIPS + filename);
-		});
-
-	    // create file path for compilation
-		fs.mkdirSync(PATH_TO_COMPILATIONS, { recursive: true });
-
-		console.log('Compiling videos to ' + mergeFileName + '...');
-		let self = this;
-		// call ffmpeg merge command
-		command
-			.on('error', function(err) {
-    			console.log('An error occurred: ' + err.message);
-  			})
-			.on('end', function() {
-				console.log('Video compilation finished !');
-				
-				// Start uploading 
-				if (driveConfig) {
-					// config exists
-					self.uploadCompilations(driveConfig);
-				} else {
-					// config not set, default folder
-					self.uploadCompilations('');
-				}
-  			})
-  			.mergeToFile(PATH_TO_COMPILATIONS + mergeFileName);
-	},
 
 	uploadCompilations: function (destination) {
     	const self = this;
