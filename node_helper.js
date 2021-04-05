@@ -110,7 +110,8 @@ module.exports = NodeHelper.create({
 
 		hbjs.spawn({ input: fileFullName, output: 'test.mp4' })
 			.on('error', err => {
-			// invalid user input, no video found etc
+				console.log('conversion did not work');
+				console.log(err);
 			})
 			.on('progress', progress => {
 			console.log(
