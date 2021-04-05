@@ -106,9 +106,8 @@ module.exports = NodeHelper.create({
 				console.log(error);
 			});
 
-		const hbjs = require('handbrake-js')
-
-		hbjs.spawn({ input: fileFullName, output: 'test.mp4' })
+		outputPath = PATH_TO_CLIPS + 'TEST.mp4';
+		hbjs.spawn({ input: fileFullName, output: outputPath })
 			.on('error', err => {
 				console.log('conversion did not work');
 				console.log(err);
