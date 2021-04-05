@@ -3,6 +3,7 @@ const NodeHelper = require('node_helper');
 const fs = require('fs');
 const moment = require('moment');
 const PiCamera = require('pi-camera');
+const hbjs = require('handbrake-js')
 
 const PATH_TO_CLIPS = './modules/MMM-1-Second-A-Day/videos/clips/';
 
@@ -104,5 +105,19 @@ module.exports = NodeHelper.create({
 				console.log("error recording video");
 				console.log(error);
 			});
+
+		const hbjs = require('handbrake-js')
+
+		hbjs.spawn({ input: fileFullName, output: 'test.mp4' })
+			.on('error', err => {
+			// invalid user input, no video found etc
+			})
+			.on('progress', progress => {
+			console.log(
+				'Percent complete: %s, ETA: %s',
+				progress.percentComplete,
+				progress.eta
+			)
+			})
 	}
 });
