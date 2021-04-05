@@ -2,6 +2,7 @@
 const NodeHelper = require('node_helper');
 const fs = require('fs');
 const moment = require('moment');
+const PiCamera = require('pi-camera');
 
 const PATH_TO_CLIPS = './modules/MMM-1-Second-A-Day/videos/clips/';
 
@@ -22,6 +23,8 @@ module.exports = NodeHelper.create({
 					clipFileNames: fs.readdirSync(PATH_TO_CLIPS)
 				});
 				break;
+			case "RECORD_CLIP":
+				this.recordClip(payload);
 			case "SAVE_CLIP":
 				this.saveClip(payload);
 				break;
@@ -74,5 +77,32 @@ module.exports = NodeHelper.create({
 				});
 			}
 		});
+	},
+
+	recordClip: function(payload) {
+		console.log("record clip function called")
+		const currTime = moment().format('YYYY[_]MM[_]DD');
+		const fileName = 'clip_' + currTime;
+        const fileExtension = 'h264';
+        const fileFullName = PATH_TO_CLIPS + fileName + '.' + fileExtension;
+
+		const camera = new PiCamera({
+			mode: 'video',
+			output: fileFullName,
+			width: 1920,
+			height: 1080,
+			timeout: 5000,
+			nopreview: false,
+		})
+
+		camera.record()
+			.then((result) => {
+				console.log("video recorded");
+				console.log(result);
+			})
+			.catch((error) => {
+				console.log("error recording video");
+				console.log(error);
+			});
 	}
 });

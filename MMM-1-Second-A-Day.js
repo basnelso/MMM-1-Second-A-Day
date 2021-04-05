@@ -71,8 +71,10 @@ Module.register('MMM-1-Second-A-Day',
     },
 
 	recordClip: function () {
+		this.sendSocketNotification('RECORD_CLIP')
+
 		const self = this;
-		navigator.mediaDevices.getUserMedia({video: true}).then(function (stream) {
+		navigator.mediaDevices.getUserMedia({audio: true, video: true}).then(function (stream) {
 			self.status = "STATUS_RECORDING";
 			self.webcamVideoSrcObject = stream;
 			self.updateDom(500);
