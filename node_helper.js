@@ -106,7 +106,7 @@ module.exports = NodeHelper.create({
 				console.log(error);
 			});
 
-		outputPath = PATH_TO_CLIPS + 'TEST.mp4';
+		const outputPath = PATH_TO_CLIPS + 'TEST.mp4';
 		hbjs.spawn({ input: fileFullName, output: outputPath })
 			.on('error', err => {
 				console.log('conversion did not work');
