@@ -73,6 +73,7 @@ Module.register('MMM-1-Second-A-Day',
 	recordClip: function () {
 		this.sendSocketNotification('RECORD_CLIP')
 
+		/*
 		const self = this;
 		navigator.mediaDevices.getUserMedia({audio: true, video: true}).then(function (stream) {
 			self.status = "STATUS_RECORDING";
@@ -103,5 +104,6 @@ Module.register('MMM-1-Second-A-Day',
 			}, 500);
 
 		});
+		*/
 	},
 });
