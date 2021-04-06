@@ -121,6 +121,6 @@ module.exports = NodeHelper.create({
 				}
 				console.log(`stdout: ${stdout}`);
 			});
-		}, 10000)
+		}, 20000)
 	}
 });
