@@ -3,7 +3,7 @@ const NodeHelper = require('node_helper');
 const fs = require('fs');
 const moment = require('moment');
 const PiCamera = require('pi-camera');
-const hbjs = require('handbrake-js')
+const { exec } = require("child_process");
 
 const PATH_TO_CLIPS = './modules/MMM-1-Second-A-Day/videos/clips/';
 
@@ -104,20 +104,22 @@ module.exports = NodeHelper.create({
 			.catch((error) => {
 				console.log("error recording video");
 				console.log(error);
-			});
-
+		});
+		
 		const outputPath = PATH_TO_CLIPS + 'TEST.mp4';
-		hbjs.spawn({ input: fileFullName, output: outputPath })
-			.on('error', err => {
-				console.log('conversion did not work');
-				console.log(err);
-			})
-			.on('progress', progress => {
-			console.log(
-				'Percent complete: %s, ETA: %s',
-				progress.percentComplete,
-				progress.eta
-			)
-			})
+		setTimeout(function() {
+			const execCommand = ['MP4Box', '-add', fileFullName, outputPath].join(' ')
+			exec(execCommand, (error, stdout, stderr) => {
+				if (error) {
+					console.log(`error: ${error.message}`);
+					return;
+				}
+				if (stderr) {
+					console.log(`stderr: ${stderr}`);
+					return;
+				}
+				console.log(`stdout: ${stdout}`);
+			});
+		}, 10000)
 	}
 });

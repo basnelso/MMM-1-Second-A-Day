@@ -23,7 +23,6 @@
     "fluent-ffmpeg": "^2.1.2",
     "googleapis": "^39.2.0",
     "moment": "^2.25.3",
-    "pi-camera": "^1.5.0",
-    "handbrake-js": "^5.0.2"
+    "pi-camera": "^1.5.0"
   }
 }
