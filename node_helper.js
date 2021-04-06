@@ -26,6 +26,7 @@ module.exports = NodeHelper.create({
 				break;
 			case "RECORD_CLIP":
 				this.recordClip(payload);
+				break;
 			case "SAVE_CLIP":
 				this.saveClip(payload);
 				break;
