@@ -101,7 +101,9 @@ module.exports = NodeHelper.create({
 		});
 
 		setTimeout(function() {
-			recordingWindow.kill();
+			console.log('recording window is pid:')
+			console.log(recordingWindow.pid)
+			exec(`kill ${recordingWindow.pid}`)
 			console.log('tried to kill preview window')
 		}, 10000)
 
