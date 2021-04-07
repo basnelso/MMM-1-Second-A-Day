@@ -2,7 +2,6 @@
 const NodeHelper = require('node_helper');
 const fs = require('fs');
 const moment = require('moment');
-const PiCamera = require('pi-camera');
 const { exec } = require("child_process");
 
 const PATH_TO_CLIPS = './modules/MMM-1-Second-A-Day/videos/clips/';
@@ -88,25 +87,19 @@ module.exports = NodeHelper.create({
         const fileExtension = 'h264';
         const fileFullName = PATH_TO_CLIPS + fileName + '.' + fileExtension;
 
-		const camera = new PiCamera({
-			mode: 'video',
-			output: fileFullName,
-			width: 1920,
-			height: 1080,
-			timeout: 5000,
-			nopreview: false,
-		})
-
-		camera.record()
-			.then((result) => {
-				console.log("video recorded");
-				console.log(result);
-			})
-			.catch((error) => {
-				console.log("error recording video");
-				console.log(error);
+		const execCommand = '~/picam/picam --alsadev hw:2,0 --rotation 180 --samplerate 32000 --preview --previewrect 640,360,1280,720'
+		exec(execCommand, (error, stdout, stderr) => {
+			if (error) {
+				console.log(`error: ${error.message}`);
+				return;
+			}
+			if (stderr) {
+				console.log(`stderr: ${stderr}`);
+				return;
+			}
+			console.log(`stdout: ${stdout}`);
 		});
-		
+		/*
 		const outputPath = PATH_TO_CLIPS + 'TEST.mp4';
 		setTimeout(function() {
 			const execCommand = ['MP4Box', '-add', fileFullName, outputPath].join(' ')
@@ -122,5 +115,6 @@ module.exports = NodeHelper.create({
 				console.log(`stdout: ${stdout}`);
 			});
 		}, 20000)
+		*/
 	}
 });
