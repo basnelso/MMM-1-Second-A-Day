@@ -100,7 +100,7 @@ module.exports = NodeHelper.create({
 			}
 			console.log(`stdout: ${stdout}`);
 		});
-
+		*/
 		setTimeout(function() {
 			recordingWindow.kill();
 			console.log('tried to kill preview window')
