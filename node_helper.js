@@ -2,7 +2,7 @@
 const NodeHelper = require('node_helper');
 const fs = require('fs');
 const moment = require('moment');
-const { spawn } = require("child_process");
+const { exec } = require("child_process");
 
 const PATH_TO_CLIPS = './modules/MMM-1-Second-A-Day/videos/clips/';
 
@@ -87,9 +87,8 @@ module.exports = NodeHelper.create({
         const fileExtension = 'h264';
         const fileFullName = PATH_TO_CLIPS + fileName + '.' + fileExtension;
 
-		const command = '~/picam/picam';
-		const args = ['--alsadev', 'hw:2,0', '--rotation', '180', '--samplerate', '32000', '--preview', '--previewrect', '640,360,1280,720'];
-		const recordingWindow = spawn(command, args);/*, (error, stdout, stderr) => {
+		const command = ['~/picam/picam', '--alsadev', 'hw:2,0', '--rotation', '180', '--samplerate', '32000', '--preview', '--previewrect', '640,360,1280,720'].join(' ');
+		const recordingWindow = exec(command, (error, stdout, stderr) => {
 			if (error) {
 				console.log(`error: ${error.message}`);
 				return;
@@ -100,7 +99,7 @@ module.exports = NodeHelper.create({
 			}
 			console.log(`stdout: ${stdout}`);
 		});
-		*/
+
 		setTimeout(function() {
 			recordingWindow.kill();
 			console.log('tried to kill preview window')
