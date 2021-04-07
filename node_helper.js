@@ -89,7 +89,7 @@ module.exports = NodeHelper.create({
 
 		const command = '~/picam/picam';
 		const args = ['--alsadev', 'hw:2,0', '--rotation', '180', '--samplerate', '32000', '--preview', '--previewrect', '640,360,1280,720'];
-		const recordingWindow = spawn(command, args, (error, stdout, stderr) => {
+		const recordingWindow = spawn(command, args);/*, (error, stdout, stderr) => {
 			if (error) {
 				console.log(`error: ${error.message}`);
 				return;
@@ -106,6 +106,8 @@ module.exports = NodeHelper.create({
 			console.log('tried to kill preview window')
 		}, 10000)
 
+		// touch ~/picam/hooks/start_recording
+		// touch ~/picam/hooks/stop_recording
 		/*
 		const outputPath = PATH_TO_CLIPS + 'TEST.mp4';
 		setTimeout(function() {
