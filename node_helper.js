@@ -90,27 +90,22 @@ module.exports = NodeHelper.create({
 
 		const command = '~/picam/picam';
 		const args = ['--alsadev', 'hw:2,0', '--rotation', '180', '--samplerate', '32000', '--preview', '--previewrect', '640,360,1280,720'];
-		const recordingWindow = spawn(command, args, {shell: true}); /*(error, stdout, stderr) => {
-			if (error) {
-				console.log(`error: ${error.message}`);
-				return;
-			}
-			if (stderr) {
-				console.log(`stderr: ${stderr}`);
-				return;
-			}
-			console.log(`stdout: ${stdout}`);
-		});
-*/
+		const recordingWindow = spawn(command, args, {shell: true});
+		
 		setTimeout(function() {
-			//exec('touch ~/picam/hooks/start_recording')
-			//recordingWindow.kill();
-			killer(recordingWindow.pid, 'SIGTERM', function(err) {
-				console.log(err);
-			});
-			console.log('killed process');
-			//exec(`kill ${recordingWindow.pid + 1}`)
-		}, 10000)
+			exec('touch ~/picam/hooks/start_recording')
+			setTimeout(function() {
+				exec('touch ~/picam/hooks/stop_recording')
+				setTimeout(function() {
+					killer(recordingWindow.pid, 'SIGTERM', function(err) {
+						console.log(err);
+					})
+					// Send signal to convert + upload video
+				}, 2000);
+			}, 10000)
+		}, 3000)
+
+		console.log('exiting function')
 
 		// touch ~/picam/hooks/start_recording
 		// touch ~/picam/hooks/stop_recording
