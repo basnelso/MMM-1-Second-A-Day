@@ -54,12 +54,6 @@ module.exports = NodeHelper.create({
 						self.sendSocketNotification("STATUS_UPDATE", {
 							status: "STATUS_UPLOADED"
 						});
-
-						fs.unlink(SECOND_PATH + file, (err) => {
-							if (err) {
-								console.log(err);
-							}
-						});
 					});
 				});
 			}
