@@ -146,6 +146,7 @@ function uploadFile(auth, uploadInfo) {
     const drive = google.drive({version: 'v3', auth});
     let fileMetadata;
     if (uploadInfo.driveDestination !== '') {
+        console.log('uploading to folder', uploadInfo.driveDestination)
         fileMetadata = {
             'name': uploadInfo.uploadFileName,
             parents: [uploadInfo.driveDestination]
@@ -170,7 +171,6 @@ function uploadFile(auth, uploadInfo) {
             console.error(err);
         } else {
             console.log('Finished uploading ' + uploadInfo.uploadFileName);
-            console.log(uploadInfo.uploadFilePath);
             fs.unlink(uploadInfo.uploadFilePath, (err) => {
                 if (err) {
                     console.log(err);
