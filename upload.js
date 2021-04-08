@@ -10,7 +10,7 @@ const SCOPES = ['https://www.googleapis.com/auth/drive.file'];
 const TOKEN_PATH = './modules/MMM-1-Second-A-Day/token.json';
 const CREDENTIAL_PATH = './modules/MMM-1-Second-A-Day/credentials.json';
 
-const MIME_FILE_TYPE = 'video/webm';
+const MIME_FILE_TYPE = 'video/mp4';
 
 // Check if 'node upload.js' is being called i.e. if the module directory is
 // current directory

@@ -68,6 +68,8 @@ Module.register('MMM-1-Second-A-Day',
 	},
 
     socketNotificationReceived: function(notification, payload) {
+		
+
 	    Log.info("MMM-1-Second-A-Day socketNotificationReceived: " + notification);
     },
 

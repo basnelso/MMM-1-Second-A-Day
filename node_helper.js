@@ -2,10 +2,9 @@
 const NodeHelper = require('node_helper');
 const fs = require('fs');
 const moment = require('moment');
-const { exec, spawn } = require("child_process");
-const killer = require('tree-kill')
+const { spawn, exec } = require("child_process");
 
-const PATH_TO_CLIPS = './modules/MMM-1-Second-A-Day/videos/clips/';
+const PATH_TO_CLIPS = '~/picam/rec/archive/';
 
 module.exports = NodeHelper.create({
     start: function() {
@@ -27,59 +26,39 @@ module.exports = NodeHelper.create({
 			case "RECORD_CLIP":
 				this.recordClip(payload);
 				break;
-			case "SAVE_CLIP":
-				this.saveClip(payload);
-				break;
-			case "UPLOAD_COMPILATIONS":
-				this.uploadCompilations(payload);
+			case "UPLOAD_CLIP":
+				this.uploadClip('mirror-videos');
 				break;
 			case "":
 				break;
 		}
     },
 
-    saveClip : function(filename) {
-		const fileFullName = PATH_TO_CLIPS + filename + '.mp4';
-
-        fs.mkdirSync(PATH_TO_CLIPS, { recursive: true });
-        fs.writeFile(fileFullName, Buffer.from(blob), {}, err => {
-            if(err){
-                console.error(err)
-                return
-            }
-            console.log('video saved')
-			self.sendSocketNotification("STATUS_UPDATE", {
-				status: "STATUS_DEFAULT",
-				clipFileNames: fs.readdirSync(PATH_TO_CLIPS)
-			});
-        })
-    },
-
-	uploadCompilations: function (destination) {
-    	const self = this;
+	uploadClip: function(destination) {
 		this.sendSocketNotification("STATUS_UPDATE", {
 			status: "STATUS_UPLOADING"
 		});
-		const uploadUniqueFile = require('./upload.js');
 
-		fs.readdir(PATH_TO_COMPILATIONS, function(err, files) {
+		const uploadUniqueFile = require('./upload.js');
+		fs.readdir(PATH_TO_CLIPS, function(err, files) {
 			if (err) 
 				console.error(err);
 			else {
 				files.forEach(function(file) {
 					console.log("Uploading " + file);
-					uploadUniqueFile(file, PATH_TO_COMPILATIONS+file, destination, () => {
+					uploadUniqueFile(file, PATH_TO_CLIPS + file, destination, () => {
 						self.sendSocketNotification("STATUS_UPDATE", {
 							status: "STATUS_UPLOADED"
 						});
+
+						//exec(`rm ${PATH_TO_CLIPS + file}`)
 					});
 				});
 			}
 		});
 	},
 
-	recordClip: function(payload) {
-		const recording_length = 10;
+	recordClip: function(recording_length) {
 		const filename = 'clip_' + moment().format('YYYY[_]MM[_]DD[_]h:mm:ss');
 		const recordingWindow = spawn('bash', ['~/start_picam.sh', recording_length, filename], {shell: true});
 
@@ -104,7 +83,7 @@ module.exports = NodeHelper.create({
 		var self = this;
 		setTimeout(function() {
 			console.log('save video')
-			//self.sendSocketNotification('SAVE_CLIP', filename)
+			self.sendSocketNotification('UPLOAD_CLIP')
         }, (10 + recording_length) * 1000);
 	}
 });

@@ -22,7 +22,6 @@
   "dependencies": {
     "fluent-ffmpeg": "^2.1.2",
     "googleapis": "^39.2.0",
-    "moment": "^2.25.3",
-    "tree-kill": "^1.2.2"
+    "moment": "^2.25.3"
   }
 }
