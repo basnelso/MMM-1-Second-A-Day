@@ -28,7 +28,6 @@ module.exports = NodeHelper.create({
 				this.recordClip(payload);
 				break;
 			case "UPLOAD_CLIP":
-				console.log('got notification upload clip')
 				this.uploadClip(payload);
 				break;
 			case "":
@@ -50,13 +49,13 @@ module.exports = NodeHelper.create({
 			} else {
 				files.forEach(function(file) {
 					console.log("Uploading " + file);
-					uploadUniqueFile(file, SECOND_PATH + file, 'mirror-videos', () => {
+					uploadUniqueFile(file, SECOND_PATH + file, '', () => {
 						console.log('uploaded video')
 						self.sendSocketNotification("STATUS_UPDATE", {
 							status: "STATUS_UPLOADED"
 						});
 
-						//exec(`rm ${PATH_TO_CLIPS + file}`)
+						exec(`rm ${SECOND_PATH + file}`)
 					});
 				});
 			}
