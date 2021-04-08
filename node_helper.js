@@ -49,8 +49,7 @@ module.exports = NodeHelper.create({
 			} else {
 				files.forEach(function(file) {
 					console.log("Uploading " + file);
-					uploadUniqueFile(file, SECOND_PATH + file, 'mirror-videos', (data) => {
-						console.log('uploaded video: ', data)
+					uploadUniqueFile(file, SECOND_PATH + file, '14-i6Hvbqfw3wsBKhti9h_IMD-ty1sHsE', (data) => {
 						self.sendSocketNotification("STATUS_UPDATE", {
 							status: "STATUS_UPLOADED"
 						});
