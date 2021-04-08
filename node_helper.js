@@ -82,13 +82,8 @@ module.exports = NodeHelper.create({
 	},
 
 	recordClip: function(payload) {
-		console.log("record clip function called")
-		const currTime = moment().format('YYYY[_]MM[_]DD');
-		const fileName = 'clip_' + currTime;
-        const fileExtension = 'h264';
-        const fileFullName = PATH_TO_CLIPS + fileName + '.' + fileExtension;
-
-		const recordingWindow = spawn('bash', ['~/start_picam.sh'], {shell: true});
+		const filename = 'clip_' + moment().format('YYYY[_]MM[_]DD');
+		const recordingWindow = spawn('bash', ['~/start_picam.sh', '10', filename], {shell: true});
 
 		recordingWindow.stdout.on('data', function (data) {
 			if (data) {
@@ -107,8 +102,6 @@ module.exports = NodeHelper.create({
 				console.log('child process exited with code ' + code.toString());
 			}
 		});
-
-		console.log('exiting function')
 
 		// touch ~/picam/hooks/start_recording
 		// touch ~/picam/hooks/stop_recording
