@@ -5,6 +5,7 @@ const moment = require('moment');
 const { spawn, exec } = require("child_process");
 
 const PATH_TO_CLIPS = '~/picam/rec/archive/';
+const SECOND_PATH = './modules/MMM-1-Second-A-Day/videos/clips/';
 
 module.exports = NodeHelper.create({
     start: function() {
@@ -42,13 +43,14 @@ module.exports = NodeHelper.create({
 
 		console.log('uploading clip to', destination);
 		const uploadUniqueFile = require('./upload.js');
-		fs.readdir(PATH_TO_CLIPS, function(err, files) {
-			if (err) 
+		fs.readdir(SECOND_PATH, function(err, files) {
+			if (err) {
+				console.log('readir error');
 				console.error(err);
-			else {
+			} else {
 				files.forEach(function(file) {
 					console.log("Uploading " + file);
-					uploadUniqueFile(file, PATH_TO_CLIPS + file, destination, () => {
+					uploadUniqueFile(file, SECOND_PATH + file, destination, () => {
 						console.log('uploaded video')
 						self.sendSocketNotification("STATUS_UPDATE", {
 							status: "STATUS_UPLOADED"
