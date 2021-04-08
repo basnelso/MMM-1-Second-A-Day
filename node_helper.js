@@ -27,7 +27,8 @@ module.exports = NodeHelper.create({
 				this.recordClip(payload);
 				break;
 			case "UPLOAD_CLIP":
-				this.uploadClip('mirror-videos');
+				console.log('got notification upload clip')
+				this.uploadClip(payload);
 				break;
 			case "":
 				break;
