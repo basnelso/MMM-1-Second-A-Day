@@ -3,6 +3,7 @@ const NodeHelper = require('node_helper');
 const fs = require('fs');
 const moment = require('moment');
 const { exec, spawn } = require("child_process");
+const killer = require('tree-kill')
 
 const PATH_TO_CLIPS = './modules/MMM-1-Second-A-Day/videos/clips/';
 
@@ -103,7 +104,10 @@ module.exports = NodeHelper.create({
 */
 		setTimeout(function() {
 			//exec('touch ~/picam/hooks/start_recording')
-			recordingWindow.kill();
+			//recordingWindow.kill();
+			killer(recordingWindow.pid, 'SIGTERM', function(err) {
+				console.log(err);
+			});
 			console.log('killed process');
 			//exec(`kill ${recordingWindow.pid + 1}`)
 		}, 10000)
