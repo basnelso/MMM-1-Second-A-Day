@@ -82,7 +82,7 @@ module.exports = NodeHelper.create({
 	},
 
 	recordClip: function(payload) {
-		const filename = 'clip_' + moment().format('YYYY[_]MM[_]DD, h:mm:ss');
+		const filename = 'clip_' + moment().format('YYYY[_]MM[_]DD,[_]h:mm:ss');
 		const recordingWindow = spawn('bash', ['~/start_picam.sh', '10', filename], {shell: true});
 
 		recordingWindow.stdout.on('data', function (data) {
