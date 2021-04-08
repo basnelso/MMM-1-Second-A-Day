@@ -136,6 +136,7 @@ function uploadUniqueFile(auth, uploadInfo) {
         }
 
         uploadFile(auth, uploadInfo);
+        return true;
     });
   }
 

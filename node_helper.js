@@ -49,8 +49,8 @@ module.exports = NodeHelper.create({
 			} else {
 				files.forEach(function(file) {
 					console.log("Uploading " + file);
-					uploadUniqueFile(file, SECOND_PATH + file, '', () => {
-						console.log('uploaded video')
+					uploadUniqueFile(file, SECOND_PATH + file, '', (data) => {
+						console.log('uploaded video: ', data)
 						self.sendSocketNotification("STATUS_UPDATE", {
 							status: "STATUS_UPLOADED"
 						});
