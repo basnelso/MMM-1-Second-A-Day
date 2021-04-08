@@ -89,7 +89,7 @@ module.exports = NodeHelper.create({
 
 		const command = '~/picam/picam';
 		const args = ['--alsadev', 'hw:2,0', '--rotation', '180', '--samplerate', '32000', '--preview', '--previewrect', '640,360,1280,720'];
-		const recordingWindow = spawn(command, args); /*(error, stdout, stderr) => {
+		const recordingWindow = spawn(command, args, {shell: true}); /*(error, stdout, stderr) => {
 			if (error) {
 				console.log(`error: ${error.message}`);
 				return;
