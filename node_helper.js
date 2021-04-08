@@ -55,7 +55,11 @@ module.exports = NodeHelper.create({
 							status: "STATUS_UPLOADED"
 						});
 
-						exec(`rm ${SECOND_PATH + file}`)
+						fs.unlink(SECOND_PATH + file, (err) => {
+							if (err) {
+								console.log(err);
+							}
+						});
 					});
 				});
 			}
