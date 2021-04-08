@@ -92,6 +92,18 @@ module.exports = NodeHelper.create({
 		const args = ['--alsadev', 'hw:2,0', '--rotation', '180', '--samplerate', '32000', '--preview', '--previewrect', '640,360,1280,720'];
 		const recordingWindow = spawn(command, args, {shell: true});
 
+		recordingWindow.stdout.on('data', function (data) {
+			console.log('stdout: ' + data.toString());
+		});
+		  
+		recordingWindow.stderr.on('data', function (data) {
+			console.log('stderr: ' + data.toString());
+		});
+		  
+		recordingWindow.on('exit', function (code) {
+			console.log('child process exited with code ' + code.toString());
+		});
+		
 		setTimeout(function() {
 			exec('touch ~/picam/hooks/start_recording')
 			setTimeout(function() {
@@ -105,17 +117,7 @@ module.exports = NodeHelper.create({
 			}, 10000)
 		}, 3000)
 
-		recordingWindow.stdout.on('data', function (data) {
-			console.log('stdout: ' + data.toString());
-		});
-		  
-		recordingWindow.stderr.on('data', function (data) {
-			console.log('stderr: ' + data.toString());
-		});
-		  
-		recordingWindow.on('exit', function (code) {
-			console.log('child process exited with code ' + code.toString());
-		});
+
 
 		console.log('exiting function')
 
