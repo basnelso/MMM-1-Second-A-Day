@@ -88,9 +88,7 @@ module.exports = NodeHelper.create({
         const fileExtension = 'h264';
         const fileFullName = PATH_TO_CLIPS + fileName + '.' + fileExtension;
 
-		const command = '~/picam/picam';
-		const args = ['--alsadev', 'hw:2,0', '--rotation', '180', '--samplerate', '32000', '--preview', '--previewrect', '640,360,1280,720'];
-		const recordingWindow = spawn(command, args, {shell: true});
+		const recordingWindow = spawn('bash', ['~/start_picam.sh'], {shell: true});
 
 		recordingWindow.stdout.on('data', function (data) {
 			if (data) {
@@ -109,23 +107,6 @@ module.exports = NodeHelper.create({
 				console.log('child process exited with code ' + code.toString());
 			}
 		});
-
-		setTimeout(function() {
-			exec('touch ~/picam/hooks/start_record');
-			setTimeout(function() {
-				console.log('stopping recording');
-				exec('touch ~/picam/hooks/stop_record');
-				setTimeout(function() {
-					console.log('killing window');
-					killer(recordingWindow.pid, 'SIGTERM', function(err) {
-						console.log(err);
-					});
-					// Send signal to convert + upload video
-				}, 3000);
-			}, 10000);
-		}, 3000);
-
-
 
 		console.log('exiting function')
 
