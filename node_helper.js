@@ -111,10 +111,10 @@ module.exports = NodeHelper.create({
 		});
 
 		setTimeout(function() {
-			exec('touch ~/picam/hooks/start_recording');
+			exec('touch ~/picam/hooks/start_record');
 			setTimeout(function() {
 				console.log('stopping recording');
-				exec('touch ~/picam/hooks/stop_recording');
+				exec('touch ~/picam/hooks/stop_record');
 				setTimeout(function() {
 					console.log('killing window');
 					killer(recordingWindow.pid, 'SIGTERM', function(err) {
