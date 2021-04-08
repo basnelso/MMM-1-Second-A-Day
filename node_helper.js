@@ -38,12 +38,9 @@ module.exports = NodeHelper.create({
 		}
     },
 
-    saveClip : function(blob) {
-    	const self = this;
-		const currTime = moment().format('YYYY[_]MM[_]DD');
-		const fileName = 'clip_' + currTime;
-        const fileExtension = 'webm';
-        const fileFullName = PATH_TO_CLIPS + fileName + '.' + fileExtension;
+    saveClip : function(filename) {
+		const fileFullName = PATH_TO_CLIPS + filename + '.mp4';
+
         fs.mkdirSync(PATH_TO_CLIPS, { recursive: true });
         fs.writeFile(fileFullName, Buffer.from(blob), {}, err => {
             if(err){
@@ -82,8 +79,9 @@ module.exports = NodeHelper.create({
 	},
 
 	recordClip: function(payload) {
-		const filename = 'clip_' + moment().format('YYYY[_]MM[_]DD,[_]h:mm:ss');
-		const recordingWindow = spawn('bash', ['~/start_picam.sh', '10', filename], {shell: true});
+		const recording_length = 10;
+		const filename = 'clip_' + moment().format('YYYY[_]MM[_]DD[_]h:mm:ss');
+		const recordingWindow = spawn('bash', ['~/start_picam.sh', recording_length, filename], {shell: true});
 
 		recordingWindow.stdout.on('data', function (data) {
 			if (data) {
@@ -103,6 +101,10 @@ module.exports = NodeHelper.create({
 			}
 		});
 
-
+		var self = this;
+		setTimeout(function() {
+			console.log('save video')
+			//self.sendSocketNotification('SAVE_CLIP', filename)
+        }, (10 + recording_length) * 1000);
 	}
 });
