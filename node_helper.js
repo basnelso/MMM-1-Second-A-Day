@@ -39,6 +39,7 @@ module.exports = NodeHelper.create({
 			status: "STATUS_UPLOADING"
 		});
 
+		console.log('uploading clip to', destination);
 		const uploadUniqueFile = require('./upload.js');
 		fs.readdir(PATH_TO_CLIPS, function(err, files) {
 			if (err) 
@@ -47,6 +48,7 @@ module.exports = NodeHelper.create({
 				files.forEach(function(file) {
 					console.log("Uploading " + file);
 					uploadUniqueFile(file, PATH_TO_CLIPS + file, destination, () => {
+						console.log('uploaded video')
 						self.sendSocketNotification("STATUS_UPDATE", {
 							status: "STATUS_UPLOADED"
 						});

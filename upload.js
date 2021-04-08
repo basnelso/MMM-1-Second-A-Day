@@ -118,6 +118,7 @@ function getAccessToken(oAuth2Client, callback) {
  * @param {Object} uploadInfo The file info about this upload, used in callback
  */
 function uploadUniqueFile(auth, uploadInfo) {
+    console.log('in upload uniquee file')
     const drive = google.drive({version: 'v3', auth});
     drive.files.list({
         pageSize: 1000,
