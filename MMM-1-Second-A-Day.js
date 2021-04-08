@@ -41,6 +41,12 @@ Module.register('MMM-1-Second-A-Day',
 		symbol.className = "control-symbol fa fa-pause";
 		recordButton.appendChild(symbol);
 		wrapper.appendChild(recordButton);
+
+		var link_text = document.createElement("span");
+		link_text.innerHTML = "Go to bit.ly/bradysnelson to view clips/pictures";
+		wrapper.appendChild(link_text);
+
+
 		
 		const statusText = document.createElement("p");
 		wrapper.appendChild(statusText);
