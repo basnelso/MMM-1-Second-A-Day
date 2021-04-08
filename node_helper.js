@@ -93,29 +93,37 @@ module.exports = NodeHelper.create({
 		const recordingWindow = spawn(command, args, {shell: true});
 
 		recordingWindow.stdout.on('data', function (data) {
-			console.log('stdout: ' + data.toString());
+			if (data) {
+				console.log('stdout: ' + data.toString());
+			}
 		});
 		  
 		recordingWindow.stderr.on('data', function (data) {
-			console.log('stderr: ' + data.toString());
+			if (data) {
+				console.log('stderr: ' + data.toString());
+			}
 		});
 		  
 		recordingWindow.on('exit', function (code) {
-			console.log('child process exited with code ' + code.toString());
+			if (code) {
+				console.log('child process exited with code ' + code.toString());
+			}
 		});
-		
+
 		setTimeout(function() {
-			exec('touch ~/picam/hooks/start_recording')
+			exec('touch ~/picam/hooks/start_recording');
 			setTimeout(function() {
-				exec('touch ~/picam/hooks/stop_recording')
+				console.log('stopping recording');
+				exec('touch ~/picam/hooks/stop_recording');
 				setTimeout(function() {
+					console.log('killing window');
 					killer(recordingWindow.pid, 'SIGTERM', function(err) {
 						console.log(err);
-					})
+					});
 					// Send signal to convert + upload video
-				}, 2000);
-			}, 10000)
-		}, 3000)
+				}, 3000);
+			}, 10000);
+		}, 3000);
 
 
 
