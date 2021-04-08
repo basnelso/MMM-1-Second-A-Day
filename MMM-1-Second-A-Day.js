@@ -10,7 +10,7 @@ Module.register('MMM-1-Second-A-Day',
 	defaults:
 	{
 		driveDestination: '',
-		recording_length: 10
+		recording_length: 4
     },
 
 	start: function()
