@@ -151,6 +151,7 @@ function uploadFile(auth, uploadInfo) {
             parents: [uploadInfo.driveDestination]
         };
     } else {
+        console.log('uploading to root');
         fileMetadata = {
             'name': uploadInfo.uploadFileName,
         };
@@ -169,7 +170,8 @@ function uploadFile(auth, uploadInfo) {
             console.error(err);
         } else {
             console.log('Finished uploading ' + uploadInfo.uploadFileName);
-            fs.unlink(SECOND_PATH + file, (err) => {
+            console.log(uploadInfo.uploadFilePath);
+            fs.unlink(uploadInfo.uploadFilePath, (err) => {
                 if (err) {
                     console.log(err);
                 }
