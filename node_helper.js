@@ -82,7 +82,7 @@ module.exports = NodeHelper.create({
 	},
 
 	recordClip: function(payload) {
-		const filename = 'clip_' + moment().format('YYYY[_]MM[_]DD');
+		const filename = 'clip_' + moment().format('YYYY[_]MM[_]DD, h:mm:ss');
 		const recordingWindow = spawn('bash', ['~/start_picam.sh', '10', filename], {shell: true});
 
 		recordingWindow.stdout.on('data', function (data) {
@@ -103,24 +103,6 @@ module.exports = NodeHelper.create({
 			}
 		});
 
-		// touch ~/picam/hooks/start_recording
-		// touch ~/picam/hooks/stop_recording
-		/*
-		const outputPath = PATH_TO_CLIPS + 'TEST.mp4';
-		setTimeout(function() {
-			const execCommand = ['MP4Box', '-add', fileFullName, outputPath].join(' ')
-			exec(execCommand, (error, stdout, stderr) => {
-				if (error) {
-					console.log(`error: ${error.message}`);
-					return;
-				}
-				if (stderr) {
-					console.log(`stderr: ${stderr}`);
-					return;
-				}
-				console.log(`stdout: ${stdout}`);
-			});
-		}, 20000)
-		*/
+
 	}
 });
