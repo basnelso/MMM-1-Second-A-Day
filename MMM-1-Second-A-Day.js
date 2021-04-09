@@ -10,7 +10,7 @@ Module.register('MMM-1-Second-A-Day',
 	defaults:
 	{
 		driveDestination: '14-i6Hvbqfw3wsBKhti9h_IMD-ty1sHsE',
-		recording_length: 4
+		recording_length: 10
     },
 
 	start: function()

@@ -17,13 +17,6 @@ module.exports = NodeHelper.create({
 		console.log(notification);
     	const self = this;
 		switch(notification) {
-			case "START":
-				console.log("Starting node helper socket notification");
-				self.sendSocketNotification("STATUS_UPDATE", {
-					status: "STATUS_DEFAULT",
-					clipFileNames: fs.readdirSync(PATH_TO_CLIPS)
-				});
-				break;
 			case "RECORD_CLIP":
 				this.recordClip(payload);
 				break;
@@ -60,8 +53,10 @@ module.exports = NodeHelper.create({
 	},
 
 	recordClip: function(payload) {
+		console.log('LENGTH IS', payload.length);
+		console.log(payload.orientation);
 		const filename = 'clip_' + moment().format('YYYY[_]MM[_]DD[_]h:mm:ss');
-		const recordingWindow = spawn('bash', ['~/start_picam.sh', payload.recording_length, filename, payload.orientation], {shell: true});
+		const recordingWindow = spawn('bash', ['~/start_picam.sh', payload.length, filename, payload.orientation], {shell: true});
 
 		recordingWindow.stdout.on('data', function (data) {
 			if (data) {
@@ -85,7 +80,7 @@ module.exports = NodeHelper.create({
 		setTimeout(function() {
 			console.log('save video')
 			self.sendSocketNotification('UPLOAD_CLIP')
-        }, (10 + payload.recording_length) * 1000);
+        }, (10 + payload.length) * 1000);
 	},
 
 	takePicture: function(orientation) {
