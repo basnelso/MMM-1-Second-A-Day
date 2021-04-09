@@ -80,7 +80,7 @@ Module.register('MMM-1-Second-A-Day',
 
 	createButton: function(type, orientation) {
 		button = document.createElement("span");
-		button.className = 'button';
+		button.className = 'capture-button';
 		var self = this;
 		button.addEventListener('click', function () {
 			if (type == 'video') {
