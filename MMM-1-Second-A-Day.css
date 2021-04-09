@@ -32,7 +32,6 @@
 }
 
 .button_wrapper {
-  color: aquamarine;
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
 }
