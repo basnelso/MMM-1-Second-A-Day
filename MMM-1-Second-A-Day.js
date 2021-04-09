@@ -43,7 +43,7 @@ Module.register('MMM-1-Second-A-Day',
 
 		wrapper.appendChild(video_wrapper);
 		wrapper.appendChild(picture_wrapper);
-
+		
 		var link_text = document.createElement("span");
 		link_text.innerHTML = "Go to bit.ly/bradysnelson to view clips/pictures";
 		wrapper.appendChild(link_text);
@@ -102,6 +102,8 @@ Module.register('MMM-1-Second-A-Day',
 				button.innerHTML = 'Horizontal Pic';
 			}
 		}
+
+		return button;
 	},
 
 	recordClip: function (orientation) {
