@@ -29,9 +29,18 @@
 
   margin: 2px;
   padding: 6px 6px;
+
+  width: 250px;
+}
+
+.wrapper {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .button_wrapper {
+  width: 500px;
   display: inline-flex;
-  flex-direction: column;
+  flex-direction: row;
 }

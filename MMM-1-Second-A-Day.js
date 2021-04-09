@@ -43,11 +43,12 @@ Module.register('MMM-1-Second-A-Day',
 
 		wrapper.appendChild(video_wrapper);
 		wrapper.appendChild(picture_wrapper);
-		
+
 		var link_text = document.createElement("span");
 		link_text.innerHTML = "Go to bit.ly/bradysnelson to view clips/pictures";
 		wrapper.appendChild(link_text);
 
+		wrapper.className = 'wrapper';
 		video_wrapper.className = 'button_wrapper';
 		picture_wrapper.className = 'button_wrapper';
 		/*
