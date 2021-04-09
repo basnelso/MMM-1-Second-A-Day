@@ -42,7 +42,7 @@ module.exports = NodeHelper.create({
 			} else {
 				files.forEach(function(file) {
 					console.log("Uploading " + file);
-					uploadUniqueFile(file, SECOND_PATH + file, destination, () => {
+					uploadUniqueFile(file, SECOND_PATH + file, '', () => {
 						self.sendSocketNotification("STATUS_UPDATE", {
 							status: "STATUS_UPLOADED"
 						});
@@ -53,8 +53,6 @@ module.exports = NodeHelper.create({
 	},
 
 	recordClip: function(payload) {
-		console.log('LENGTH IS', payload.length);
-		console.log(payload.orientation);
 		const filename = 'clip_' + moment().format('YYYY[_]MM[_]DD[_]h:mm:ss');
 		const recordingWindow = spawn('bash', ['~/start_picam.sh', payload.length, filename, payload.orientation], {shell: true});
 
