@@ -27,27 +27,30 @@ Module.register('MMM-1-Second-A-Day',
 
 	getDom: function() {
 		const wrapper = document.createElement("div");
-		wrapper.id = 'MMM1SecondADayContainer';
+		const video_wrapper = document.createElement("span");
+		const picture_wrapper = document.createElement("span");
 
-		const recordButton = document.createElement("span");
-		recordButton.id = 'record_button'
-		recordButton.className = 'button'
-		var self = this;
-        recordButton.addEventListener("click", function () {
-			self.recordClip();
-        });
+		const verticalVideoButton = this.createButton('video', 'vertical');
+		const horizontalVideoButton = this.createButton('video', 'horizontal');
+		const verticalPicButton = this.createButton('pic', 'vertical');
+		const horizontalPicButton = this.createButton('pic', 'horizontal');
 
-        var symbol = document.createElement("span");
-		symbol.className = "control-symbol fa fa-pause";
-		recordButton.appendChild(symbol);
-		wrapper.appendChild(recordButton);
+		video_wrapper.appendChild(verticalVideoButton);
+		video_wrapper.appendChild(horizontalVideoButton);
+
+		picture_wrapper.appendChild(verticalPicButton);
+		picture_wrapper.appendChild(horizontalPicButton);
+
+		wrapper.appendChild(video_wrapper);
+		wrapper.appendChild(picture_wrapper);
 
 		var link_text = document.createElement("span");
 		link_text.innerHTML = "Go to bit.ly/bradysnelson to view clips/pictures";
 		wrapper.appendChild(link_text);
 
-
-		
+		video_wrapper.className = 'button_wrapper';
+		picture_wrapper.className = 'button_wrapper';
+		/*
 		const statusText = document.createElement("p");
 		wrapper.appendChild(statusText);
 		console.log(this.status);
@@ -69,51 +72,53 @@ Module.register('MMM-1-Second-A-Day',
 		} else if (this.status == 'STATUS_UPLOADED') {
 			statusText.innerHTML = "Uploaded!";
 		}
+		*/
 
 		return wrapper;
 	},
 
-    socketNotificationReceived: function(notification, payload) {
-	    Log.info("MMM-1-Second-A-Day socketNotificationReceived: " + notification);
+	createButton: function(type, orientation) {
+		button = document.createElement("span");
+		button.className = 'button';
+		var self = this;
+		button.addEventListener('click', function () {
+			if (type == 'video') {
+				self.recordClip(orientation);
+			} else if (type == 'pic') {
+				self.takePicture(orientation);
+			}
+		})
+
+		if (type == 'video') {
+			if (orientation == 'vertical') {
+				button.innerHTML = 'Vertical Video';
+			} else if (orientation == 'horizontal') {
+				button.innerHTML = 'Horizontal Video';
+			}
+		} else if (type =='pic') {
+			if (orientation == 'vertical') {
+				button.innerHTML = 'Vertical Pic';
+			} else if (orientation == 'horizontal') {
+				button.innerHTML = 'Horizontal Pic';
+			}
+		}
+	},
+
+	recordClip: function (orientation) {
+		payload = {
+			length: this.config.recording_length,
+			orientation: orientation
+		}
+		this.sendSocketNotification('RECORD_CLIP', payload);
+	},
+
+	takePicture: function (orientation) {
+		this.sendSocketNotification('TAKE_PICTURE', orientation);
+	},
+
+	socketNotificationReceived: function(notification, payload) {
 		if (notification == 'UPLOAD_CLIP') {
 			this.sendSocketNotification(notification, this.config.driveDestination);
 		}
-    },
-
-	recordClip: function () {
-		this.sendSocketNotification('RECORD_CLIP', this.config.recording_length);
-
-/*
-		const self = this;
-		navigator.mediaDevices.getUserMedia({audio: true, video: true}).then(function (stream) {
-			self.status = "STATUS_RECORDING";
-			self.webcamVideoSrcObject = stream;
-			self.updateDom(500);
-
-			setTimeout(() => {
-				const blob_reader = new FileReader();
-				const blobs = [];
-				blob_reader.addEventListener("load", function (ev) {
-					self.sendSocketNotification("SAVE_CLIP", ev.currentTarget.result);
-					if (blobs.length) {
-						ev.currentTarget.readAsArrayBuffer(blobs.shift());
-					}
-				});
-
-				const recorder = new MediaRecorder(stream);
-				recorder.addEventListener("dataavailable", function (ev) {
-					if (blob_reader.readyState != 1) {
-						blob_reader.readAsArrayBuffer(ev.data);
-					} else {
-						blobs.push(ev.data);
-					}
-				});
-
-				recorder.start();
-				setTimeout(() => recorder.stop(), 10000); // 10 seconds
-			}, 500);
-
-		});
-		*/
-	},
+    }
 });

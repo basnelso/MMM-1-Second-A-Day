@@ -27,6 +27,8 @@ module.exports = NodeHelper.create({
 			case "RECORD_CLIP":
 				this.recordClip(payload);
 				break;
+			case "TAKE_PICTURE":
+				this.takePicture(payload);
 			case "UPLOAD_CLIP":
 				this.uploadClip(payload);
 				break;
@@ -57,9 +59,9 @@ module.exports = NodeHelper.create({
 		});
 	},
 
-	recordClip: function(recording_length) {
+	recordClip: function(payload) {
 		const filename = 'clip_' + moment().format('YYYY[_]MM[_]DD[_]h:mm:ss');
-		const recordingWindow = spawn('bash', ['~/start_picam.sh', recording_length, filename], {shell: true});
+		const recordingWindow = spawn('bash', ['~/start_picam.sh', payload.recording_length, filename, payload.orientation], {shell: true});
 
 		recordingWindow.stdout.on('data', function (data) {
 			if (data) {
@@ -83,6 +85,10 @@ module.exports = NodeHelper.create({
 		setTimeout(function() {
 			console.log('save video')
 			self.sendSocketNotification('UPLOAD_CLIP')
-        }, (10 + recording_length) * 1000);
+        }, (10 + payload.recording_length) * 1000);
+	},
+
+	takePicture: function(orientation) {
+		console.log('picture taken', orientation);
 	}
 });
