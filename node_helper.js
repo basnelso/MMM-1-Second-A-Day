@@ -23,6 +23,7 @@ module.exports = NodeHelper.create({
 				break;
 			case "TAKE_PICTURE":
 				this.takePicture(payload);
+				break;
 			case "UPLOAD_CLIP":
 				this.uploadClip(payload);
 				break;
