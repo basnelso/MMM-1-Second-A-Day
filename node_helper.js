@@ -84,7 +84,7 @@ module.exports = NodeHelper.create({
 
 	takePicture: function(orientation) {
 		console.log('picture taken', orientation);
-		const myCamera;
+		const myCamera = null;
 		if (orientation == 'horizontal') {
 			myCamera = new PiCamera({
 				mode: 'photo',
