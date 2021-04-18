@@ -93,6 +93,8 @@ module.exports = NodeHelper.create({
 				width: 1920,
 				height: 1080,
 				nopreview: false,
+				hflip: true,
+				fullscreen: false,
 			});
 		} else if (orientation == 'vertical') {
 			myCamera = new PiCamera({
@@ -101,6 +103,8 @@ module.exports = NodeHelper.create({
 				width: 1080,
 				height: 1920,
 				nopreview: false,
+				hflip: true,
+				fullscreen: false,
 			});
 		}
 
