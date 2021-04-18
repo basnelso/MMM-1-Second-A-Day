@@ -93,7 +93,7 @@ module.exports = NodeHelper.create({
 				width: 1920,
 				height: 1080,
 				nopreview: false,
-				hflip: true,
+				vflip: true,
 				fullscreen: false,
 			});
 		} else if (orientation == 'vertical') {
@@ -103,7 +103,7 @@ module.exports = NodeHelper.create({
 				width: 1080,
 				height: 1920,
 				nopreview: false,
-				hflip: true,
+				vflip: true,
 				fullscreen: false,
 			});
 		}
