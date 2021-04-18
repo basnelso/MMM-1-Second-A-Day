@@ -3,9 +3,10 @@ const NodeHelper = require('node_helper');
 const fs = require('fs');
 const moment = require('moment');
 const { spawn, exec } = require("child_process");
+const PiCamera = require('pi-camera');
 
-const PATH_TO_CLIPS = '~/picam/rec/archive/';
-const SECOND_PATH = './modules/MMM-1-Second-A-Day/videos/clips/';
+const VIDEO_PATH = './modules/MMM-1-Second-A-Day/videos/clips/';
+const IMAGE_PATH = './modules/MMM-1-Second-A-Day/pictures/clips/';
 
 module.exports = NodeHelper.create({
     start: function() {
@@ -36,13 +37,13 @@ module.exports = NodeHelper.create({
 		});
 
 		const uploadUniqueFile = require('./upload.js');
-		fs.readdir(SECOND_PATH, function(err, files) {
+		fs.readdir(VIDEO_PATH, function(err, files) {
 			if (err) {
 				console.error(err);
 			} else {
 				files.forEach(function(file) {
 					console.log("Uploading " + file);
-					uploadUniqueFile(file, SECOND_PATH + file, '14-i6Hvbqfw3wsBKhti9h_IMD-ty1sHsE', () => {
+					uploadUniqueFile(file, VIDEO_PATH + file, '14-i6Hvbqfw3wsBKhti9h_IMD-ty1sHsE', () => {
 						self.sendSocketNotification("STATUS_UPDATE", {
 							status: "STATUS_UPLOADED"
 						});
@@ -83,5 +84,32 @@ module.exports = NodeHelper.create({
 
 	takePicture: function(orientation) {
 		console.log('picture taken', orientation);
+		const myCamera;
+		if (orientation == 'horizontal') {
+			myCamera = new PiCamera({
+				mode: 'photo',
+				output: `${IMAGE_PATH}/test.jpg`,
+				width: 1920,
+				height: 1080,
+				nopreview: false,
+			});
+		} else if (orientation == 'vertical') {
+			myCamera = new PiCamera({
+				mode: 'photo',
+				output: `${IMAGE_PATH}/test.jpg`,
+				width: 1080,
+				height: 1920,
+				nopreview: false,
+			});
+		}
+
+		myCamera.snap()
+			.then((result) => {
+				// Your picture was captured
+			})
+			.catch((error) => {
+				console.log('error occured');
+				console.log(error);
+			});
 	}
 });
