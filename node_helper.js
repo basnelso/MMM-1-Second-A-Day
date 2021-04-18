@@ -105,7 +105,8 @@ module.exports = NodeHelper.create({
 
 		myCamera.snap()
 			.then((result) => {
-				// Your picture was captured
+				console.print('took a picture')
+				console.log(result)
 			})
 			.catch((error) => {
 				console.log('error occured');
