@@ -118,7 +118,6 @@ function getAccessToken(oAuth2Client, callback) {
  * @param {Object} uploadInfo The file info about this upload, used in callback
  */
 function uploadUniqueFile(auth, uploadInfo, callback) {
-    console.log('in upload uniquee file')
     const drive = google.drive({version: 'v3', auth});
     drive.files.list({
         pageSize: 1000,
@@ -157,8 +156,15 @@ function uploadFile(auth, uploadInfo) {
             'name': uploadInfo.uploadFileName,
         };
     }
+    
+    var mimeType;
+    if (uploadInfo.uploadFilePath.endsWith('.jpg')) {
+        mimeType = 'picture/jpeg';
+    } else {
+        mimeType = 'video/mp4';
+    }
     const media = {
-        mimeType: MIME_FILE_TYPE,
+        mimeType: mimeType,
         body: fs.createReadStream(uploadInfo.uploadFilePath)
     };
     drive.files.create({
