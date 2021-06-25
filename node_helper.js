@@ -99,6 +99,7 @@ module.exports = NodeHelper.create({
 	takePicture: function(orientation) {
 		const filename = 'pic_' + moment().format('YYYY[_]MM[_]DD[_]h:mm:ss');
 		var myCamera = null;
+		var self = this;
 		if (orientation == 'horizontal') {
 			myCamera = new PiCamera({
 				mode: 'photo',
