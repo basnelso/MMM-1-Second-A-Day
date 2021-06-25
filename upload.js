@@ -160,8 +160,10 @@ function uploadFile(auth, uploadInfo) {
     var mimeType;
     if (uploadInfo.uploadFilePath.endsWith('.jpg')) {
         mimeType = 'picture/jpeg';
+        console.log('id picture')
     } else {
         mimeType = 'video/mp4';
+        console.log('id video')
     }
     const media = {
         mimeType: mimeType,
