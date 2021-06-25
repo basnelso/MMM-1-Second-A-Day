@@ -52,6 +52,20 @@ module.exports = NodeHelper.create({
 				});
 			}
 		});
+		fs.readdir(IMAGE_PATH, function(err, files) {
+			if (err) {
+				console.error(err);
+			} else {
+				files.forEach(function(file) {
+					console.log("Uploading " + file);
+					uploadUniqueFile(file, VIDEO_PATH + file, '14-i6Hvbqfw3wsBKhti9h_IMD-ty1sHsE', () => {
+						self.sendSocketNotification("STATUS_UPDATE", {
+							status: "STATUS_UPLOADED"
+						});
+					});
+				});
+			}
+		});
 	},
 
 	recordClip: function(payload) {
@@ -78,7 +92,6 @@ module.exports = NodeHelper.create({
 
 		var self = this;
 		setTimeout(function() {
-			console.log('save video')
 			self.sendSocketNotification('UPLOAD_CLIP')
         }, (10 + payload.length) * 1000);
 	},
@@ -113,6 +126,7 @@ module.exports = NodeHelper.create({
 		myCamera.snap()
 			.then((result) => {
 				console.log(result)
+				self.sendSocketNotification('UPLOAD_CLIP')
 			})
 			.catch((error) => {
 				console.log('error occured');
