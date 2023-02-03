@@ -149,7 +149,7 @@ module.exports = NodeHelper.create({
 		myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
 		var urlencoded = new url.URLSearchParams();
-		urlencoded.append("arg", "takePicture");
+		urlencoded.append("arg", "takePhoto");
 
 		var requestOptions = {
 		method: 'POST',
