@@ -158,8 +158,8 @@ module.exports = NodeHelper.create({
 		redirect: 'follow'
 		};
 
-		url = "https://api.particle.io/v1/devices/3f0035000f51353532343635/moveLights";
-		fetch(url, requestOptions)
+		var endpoint = "https://api.particle.io/v1/devices/3f0035000f51353532343635/moveLights";
+		fetch(endpoint, requestOptions)
 		.then(response => response.text())
 		.then(result => console.log(result))
 		.catch(error => console.log('error', error));
