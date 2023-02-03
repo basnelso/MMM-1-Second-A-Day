@@ -5,6 +5,7 @@ const moment = require('moment');
 const { spawn, exec } = require("child_process");
 const PiCamera = require('pi-camera');
 const fetch = require('node-fetch');
+const url = require('url');
 
 const VIDEO_PATH = './modules/MMM-1-Second-A-Day/videos/clips/';
 const IMAGE_PATH = './modules/MMM-1-Second-A-Day/pictures/clips/';
@@ -147,7 +148,7 @@ module.exports = NodeHelper.create({
 		myHeaders.append("Authorization", "Bearer d7f1d8f26ca4a5df7a4fb68c3e8a5d6eb65633d8");
 		myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-		var urlencoded = new fetch.URLSearchParams();
+		var urlencoded = new url.URLSearchParams();
 		urlencoded.append("arg", methodToCall);
 
 		var requestOptions = {
