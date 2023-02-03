@@ -143,11 +143,11 @@ module.exports = NodeHelper.create({
 		console.log("moving lights with method:", methodToCall);
 		let self = this;
 
-		var myHeaders = new Headers();
+		var myHeaders = new fetch.Headers();
 		myHeaders.append("Authorization", "Bearer d7f1d8f26ca4a5df7a4fb68c3e8a5d6eb65633d8");
 		myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-		var urlencoded = new URLSearchParams();
+		var urlencoded = new fetch.URLSearchParams();
 		urlencoded.append("arg", methodToCall);
 
 		var requestOptions = {
