@@ -4,45 +4,49 @@ const fs = require('fs');
 const moment = require('moment');
 const { spawn, exec } = require("child_process");
 const PiCamera = require('pi-camera');
+const fetch = require('node-fetch');
 
 const VIDEO_PATH = './modules/MMM-1-Second-A-Day/videos/clips/';
 const IMAGE_PATH = './modules/MMM-1-Second-A-Day/pictures/clips/';
 
 module.exports = NodeHelper.create({
-    start: function() {
-        console.log("Starting node helper for: " + this.name);
-    },
+	start: function () {
+		console.log("Starting node helper for: " + this.name);
+	},
 
-    socketNotificationReceived: function(notification, payload) {
+	socketNotificationReceived: function (notification, payload) {
 		console.log('node got notification:')
 		console.log(notification);
-    	const self = this;
-		switch(notification) {
+		const self = this;
+		switch (notification) {
 			case "RECORD_CLIP":
 				this.recordClip(payload);
+				this.moveLights("takePicture");
 				break;
 			case "TAKE_PICTURE":
 				this.takePicture(payload);
+				this.moveLights("takePicture");
 				break;
 			case "UPLOAD_CLIP":
+				this.moveLights("lightWall");
 				this.uploadClip(payload);
 				break;
 			case "":
 				break;
 		}
-    },
+	},
 
-	uploadClip: function(destination) {
+	uploadClip: function (destination) {
 		this.sendSocketNotification("STATUS_UPDATE", {
 			status: "STATUS_UPLOADING"
 		});
 
 		const uploadUniqueFile = require('./upload.js');
-		fs.readdir(VIDEO_PATH, function(err, files) {
+		fs.readdir(VIDEO_PATH, function (err, files) {
 			if (err) {
 				console.error(err);
 			} else {
-				files.forEach(function(file) {
+				files.forEach(function (file) {
 					console.log("Uploading " + file);
 					uploadUniqueFile(file, VIDEO_PATH + file, '14-i6Hvbqfw3wsBKhti9h_IMD-ty1sHsE', () => {
 						self.sendSocketNotification("STATUS_UPDATE", {
@@ -52,11 +56,11 @@ module.exports = NodeHelper.create({
 				});
 			}
 		});
-		fs.readdir(IMAGE_PATH, function(err, files) {
+		fs.readdir(IMAGE_PATH, function (err, files) {
 			if (err) {
 				console.error(err);
 			} else {
-				files.forEach(function(file) {
+				files.forEach(function (file) {
 					console.log("Uploading " + file);
 					uploadUniqueFile(file, IMAGE_PATH + file, '14-i6Hvbqfw3wsBKhti9h_IMD-ty1sHsE', () => {
 						self.sendSocketNotification("STATUS_UPDATE", {
@@ -68,22 +72,22 @@ module.exports = NodeHelper.create({
 		});
 	},
 
-	recordClip: function(payload) {
+	recordClip: function (payload) {
 		const filename = 'clip_' + moment().format('YYYY[_]MM[_]DD[_]h:mm:ss');
-		const recordingWindow = spawn('bash', ['~/start_picam.sh', payload.length, filename, payload.orientation], {shell: true});
+		const recordingWindow = spawn('bash', ['~/start_picam.sh', payload.length, filename, payload.orientation], { shell: true });
 
 		recordingWindow.stdout.on('data', function (data) {
 			if (data) {
 				console.log('stdout: ' + data.toString());
 			}
 		});
-		  
+
 		recordingWindow.stderr.on('data', function (data) {
 			if (data) {
 				console.log('stderr: ' + data.toString());
 			}
 		});
-		  
+
 		recordingWindow.on('exit', function (code) {
 			if (code) {
 				console.log('child process exited with code ' + code.toString());
@@ -91,12 +95,12 @@ module.exports = NodeHelper.create({
 		});
 
 		var self = this;
-		setTimeout(function() {
+		setTimeout(function () {
 			self.sendSocketNotification('UPLOAD_CLIP')
-        }, (10 + payload.length) * 1000);
+		}, (10 + payload.length) * 1000);
 	},
 
-	takePicture: function(orientation) {
+	takePicture: function (orientation) {
 		const filename = 'pic_' + moment().format('YYYY[_]MM[_]DD[_]h:mm:ss');
 		var myCamera = null;
 		var self = this;
@@ -133,5 +137,30 @@ module.exports = NodeHelper.create({
 				console.log('error occured');
 				console.log(error);
 			});
+	},
+
+	moveLights: function (methodToCall) {
+		console.log("moving lights with method:", methodToCall);
+		let self = this;
+
+		var myHeaders = new Headers();
+		myHeaders.append("Authorization", "Bearer d7f1d8f26ca4a5df7a4fb68c3e8a5d6eb65633d8");
+		myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+		var urlencoded = new URLSearchParams();
+		urlencoded.append("arg", methodToCall);
+
+		var requestOptions = {
+		method: 'POST',
+		headers: myHeaders,
+		body: urlencoded,
+		redirect: 'follow'
+		};
+
+		url = "https://api.particle.io/v1/devices/3f0035000f51353532343635/moveLights";
+		fetch(url, requestOptions)
+		.then(response => response.text())
+		.then(result => console.log(result))
+		.catch(error => console.log('error', error));
 	}
 });
