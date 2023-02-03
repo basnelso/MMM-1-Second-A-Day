@@ -79,6 +79,7 @@ Module.register('MMM-1-Second-A-Day',
 	},
 
 	createButton: function(type, orientation) {
+		console.log('button pushed');
 		button = document.createElement("span");
 		button.className = 'capture-button';
 		var self = this;
