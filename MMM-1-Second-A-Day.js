@@ -19,6 +19,7 @@ Module.register('MMM-1-Second-A-Day',
 		this.sendSocketNotification('START', this.config);
 		this.status = "STATUS_DEFAULT";
 		this.webcamVideoSrcObject = null;
+		this.cameraState = {};
 	},
 
 	getStyles: function() {
@@ -84,6 +85,7 @@ Module.register('MMM-1-Second-A-Day',
 		button.className = 'capture-button';
 		var self = this;
 		button.addEventListener('click', function () {
+			self.switchLightsWhite();
 			if (type == 'video') {
 				self.recordClip(orientation);
 			} else if (type == 'pic') {
@@ -108,6 +110,16 @@ Module.register('MMM-1-Second-A-Day',
 		return button;
 	},
 
+	switchLightsWhite: function() {
+		console.log('its picutre time!!')
+		this.sendNotification('PICTURE_TIME');
+	},
+
+	switchLightsBack: function() {
+		console.log('sending notif with camera state to switch back:', this.cameraState)
+		this.sendNotification('REVERSE_BACK', this.cameraState);
+	},
+
 	recordClip: function (orientation) {
 		payload = {
 			length: this.config.recording_length,
@@ -124,6 +136,15 @@ Module.register('MMM-1-Second-A-Day',
 	socketNotificationReceived: function(notification, payload) {
 		if (notification == 'UPLOAD_CLIP') {
 			this.sendSocketNotification(notification, this.config.driveDestination);
+		} else if (notification == 'SWITCH_BACK') {
+			console.log('switching back from 1sec fe');
+			this.switchLightsBack();
 		}
-    }
+    },
+
+	notificationReceived: function(notification, payload, sender) {
+		if (notification == 'CAMERA_STATE') { // Recieve this from the
+			this.cameraState = payload;
+		}
+	}
 });
