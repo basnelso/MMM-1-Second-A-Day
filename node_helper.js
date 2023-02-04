@@ -30,6 +30,7 @@ module.exports = NodeHelper.create({
 				break;
 			case "UPLOAD_CLIP":
 				this.moveLights("lightWall");
+				this.sendSocketNotification('SWITCH_BACK');
 				this.uploadClip(payload);
 				break;
 			case "":
@@ -163,5 +164,8 @@ module.exports = NodeHelper.create({
 		.then(response => response.text())
 		.then(result => console.log(result))
 		.catch(error => console.log('error', error));
+
+		setTimeout(7000);
+		this.sendSocketNotification('SWITCH_BACK');
 	}
 });
