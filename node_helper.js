@@ -170,7 +170,7 @@ module.exports = NodeHelper.create({
 			console.log("waited");
 			this.sendSocketNotification('SWITCH_BACK');
 		 }
-		 ,7000);
+		 ,5000);
 
 	}
 });
