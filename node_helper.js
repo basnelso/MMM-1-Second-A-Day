@@ -166,10 +166,11 @@ module.exports = NodeHelper.create({
 		.catch(error => console.log('error', error));
 
 		console.log("about to wait to swtich back");
+		setTimeout(()=> {
+			console.log("waited");
+			this.sendSocketNotification('SWITCH_BACK');
+		 }
+		 ,7000);
 
-		setTimeout(7000);
-		console.log("waited");
-
-		this.sendSocketNotification('SWITCH_BACK');
 	}
 });
