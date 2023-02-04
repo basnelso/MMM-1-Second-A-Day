@@ -129,7 +129,6 @@ Module.register('MMM-1-Second-A-Day',
 	},
 
 	takePicture: function (orientation) {
-		console.log('take picture called frontend')
 		this.sendSocketNotification('TAKE_PICTURE', orientation);
 	},
 
